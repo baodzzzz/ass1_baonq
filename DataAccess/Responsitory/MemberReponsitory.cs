@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Member = BusinessObject.Models.Member;
 
 
@@ -16,6 +17,7 @@ namespace DataAccess.Responsitory
 {
     public class MemberReponsitory : IMemberRepository
     {
+        public ASS1_DBContext db = new ASS1_DBContext();
         public void DeleteMember(AutoMapper.Execution.Member member)
         {
             throw new NotImplementedException();
@@ -31,14 +33,33 @@ namespace DataAccess.Responsitory
             throw new NotImplementedException();
         }
 
-        public void InsertMember(AutoMapper.Execution.Member member)
+        public void InsertMember(Member member)
         {
-            throw new NotImplementedException();
+            db.Add<Member>(member);
+            if (db.SaveChanges() > 0)
+            {
+                MessageBox.Show("Add successfully!");
+            }
         }
 
         public bool Login(string email, string password)
         {
-            throw new NotImplementedException();
+            if (email != null || password != null)
+            {
+                Member member = db.Members.FirstOrDefault(m => m.Email == email && m.Password == password);
+                if (member == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public void UpdateMember(AutoMapper.Execution.Member member)
